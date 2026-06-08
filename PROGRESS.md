@@ -4,13 +4,13 @@
 **Status:** In progress
 
 ### Topics
-- [ ] a. Terminal: cd / ls / pwd / mkdir / rm / cat / less / grep / pipe / redirect
-- [ ] b. Environment variables
-- [ ] c. What a Git repository is; git init; .git folder
-- [ ] d. Three-room model: workspace → staging → repo
-- [ ] e. First commit; commit messages
-- [ ] f. .gitignore
-- [ ] g. Claude Code basics
+- [x] a. Terminal: cd / ls / pwd / mkdir / rm / cat / less / grep / pipe / redirect
+- [x] b. Environment variables
+- [x] c. What a Git repository is; git init; .git folder
+- [x] d. Three-room model: workspace → staging → repo
+- [x] e. First commit; commit messages
+- [x] f. .gitignore
+- [x] g. Claude Code basics
 
 ### Quiz
 - [ ] 20-question mixed quiz
