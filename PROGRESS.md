@@ -41,4 +41,23 @@
 - [x] ASCII diagram 2: branch off main and merging back
 
 ---
+
+## Week 1 — Day 3 (2026-06-10)
+**Status:** Complete
+
+### Topics
+- [x] a. HTML tag tree idea — 10 tags, box-inside-box model
+- [x] b. Common attributes: id, class, href, src, type, value
+- [x] c. CSS selectors: element, .class, #id — specificity order
+- [x] d. Box model — margin / border / padding / content, box-sizing: border-box
+- [x] e. display: flex — flex-direction, justify-content, align-items, gap
+- [x] f. Build: scratch.html with header, three flex cards, styled button
+
+### Quiz
+- [x] 20-question mixed quiz — Score: 20/20
+
+### Deliverable
+- [x] scratch.html committed — header, 3-card flex row, button
+
+---
 _Updated at end of each session._

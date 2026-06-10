@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html
+<head>
+    <meta charset="UTF-8" />
+<title>Scratch</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: sans-serif;
+        padding: 24px;
+        background: #f5f5f5;
+      }
+
+      header {
+        background: #1a1a2e;
+        color: white;
+        padding: 20px;
+        margin-bottom: 24px;
+      }
+
+      header h1 {
+        font-size: 24px;
+      }
+
+      .card-row {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: stretch;
+        gap: 16px;
+        margin-bottom: 24px;
+      }
+
+      .card {
+        background: white;
+        border: 1px solid #ddd;
+        padding: 20px;
+        flex: 1;
+      }
+
+      .card h2 {
+        font-size: 18px;
+        margin-bottom: 8px;
+      }
+
+      #action-btn {
+        display: block;
+        background: #e94560;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>My Scratch Page</h1>
+    </header>
+
+    <div class="card-row">
+      <div class="card">
+        <h2>Card One</h2>
+        <p>First flex child.</p>
+      </div>
+      <div class="card">
+        <h2>Card Two</h2>
+        <p>Second flex child.</p>
+      </div>
+      <div class="card">
+        <h2>Card Three</h2>
+        <p>Third flex child.</p>
+      </div>
+    </div>
+
+    <button id="action-btn" type="button">Click Me</button>
+  </body>
+</html>
+
