@@ -60,4 +60,26 @@
 - [x] scratch.html committed — header, 3-card flex row, button
 
 ---
+
+## Week 1 — Day 4 (2026-06-11)
+**Status:** Complete (deliverable carries over to Day 5)
+
+### Topics
+- [x] a. What HTTP is — client-server model, stateless fact
+- [x] b. Anatomy of an HTTP request — method, path, headers, body
+- [x] c. Anatomy of an HTTP response — status line, headers, body
+- [x] d. GET, POST, PUT, PATCH, DELETE — one scenario each, all run with curl
+- [x] e. Status code families — memorised: 200, 201, 204, 400, 401, 403, 404, 409, 500
+- [x] f. Headers — Content-Type, Authorization, Accept
+- [x] g. JSON vs XML — why JSON won
+- [x] h. curl vs Postman — when to use each
+- [x] i. Postman collection "jsonplaceholder practice" — 5 saved requests
+
+### Quiz
+- [x] 20-question mixed quiz — Score: 20/20
+
+### Deliverable
+- [ ] Draw on paper: browser loads www.example.com — DNS, request, response, rendering (carries over to Day 5)
+
+---
 _Updated at end of each session._
