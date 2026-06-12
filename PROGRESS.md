@@ -82,4 +82,27 @@
 - [ ] Draw on paper: browser loads www.example.com — DNS, request, response, rendering (carries over to Day 5)
 
 ---
+
+## Week 1 — Day 5 (2026-06-12)
+**Status:** Complete
+
+### Topics
+- [x] a. const / let / var — default to const, let for reassignment, never var
+- [x] b. === vs == — always use ===, checks type AND value
+- [x] c. Arrow functions — single-line auto-return, multi-line needs {} and return
+- [x] d. Template literals — backtick + ${} instead of Python f-strings
+- [x] e. Array methods — map, filter, find, forEach, reduce (Python list comp equivalents)
+- [x] f. Destructuring — array and object unpacking, also works in function params
+- [x] g. async / await — same keywords as Python, forgetting await returns a Promise not a value
+- [x] h. import / export — named exports use {}, default export has one per file
+- [x] i. npm vs pip — npm install, package.json, node_modules (never commit)
+- [x] j. TypeScript basics — interface, type, typing params/returns, optional fields with ?
+
+### Quiz
+- [x] 20-question mixed quiz — Score: 20/20
+
+### Deliverable
+- [x] scratch.ts — all 10 concepts, runs cleanly with npx tsx scratch.ts
+
+---
 _Updated at end of each session._
