@@ -105,4 +105,24 @@
 - [x] scratch.ts — all 10 concepts, runs cleanly with npx tsx scratch.ts
 
 ---
+
+## Week 1 — Day 6 (2026-06-13)
+**Status:** Complete
+
+### Topics
+- [x] a. What an entity is — blueprint vs row (interface vs instance analogy)
+- [x] b. Relationships: one-to-many and many-to-many with join tables
+- [x] c. REST endpoint design: 5 standard endpoints, METHOD /resource vs METHOD /resource/:id
+- [x] d. Picked project: Reading Log / Tracker
+- [x] e. Designed Book entity with all fields — id, title, author, genre, status, rating (nullable), notes, finished_at, created_at
+- [x] f. Designed full endpoint list including query param filtering (?status=x)
+- [x] g. UI sketches: list page, detail page, create form
+
+### Quiz
+- [x] 20-question mixed quiz — Score: 20/20
+
+### Deliverable
+- [x] PROJECT.md committed — project name, description, Book entity with fields/types, full endpoint list, 3 UI sketches
+
+---
 _Updated at end of each session._
