@@ -125,4 +125,27 @@
 - [x] PROJECT.md committed — project name, description, Book entity with fields/types, full endpoint list, 3 UI sketches
 
 ---
+
+## Week 2 — Day 1 (2026-06-14)
+**Status:** Complete
+
+### Topics
+- [x] a. npm init -y — package.json fields: name, version, scripts, dependencies, devDependencies
+- [x] b. Why TypeScript — TS source → tsc compiler → JS → Node runtime
+- [x] c. Install deps: express (runtime), typescript + @types/* + ts-node + nodemon (dev)
+- [x] d. tsconfig.json — target, module, rootDir, outDir, strict, esModuleInterop, skipLibCheck
+- [x] e. Folder structure: src/index.ts, routes/, controllers/, services/, models/, middleware/
+- [x] f. Wrote src/index.ts — minimal Express app, GET / returns { hello: "world" }
+- [x] g. npm scripts: dev (nodemon + ts-node), build (tsc), start (node dist/index.js)
+- [x] h. Ran npm run dev — hit GET / with curl and Postman, both returned { hello: "world" }
+
+### Quiz
+- [x] 20-question mixed quiz — Score: 16/20
+
+### Deliverable
+- [x] Express + TypeScript server running on localhost:3000
+- [x] Folder structure in place (src/routes, controllers, services, models, middleware)
+- [x] backend/README.md with setup and how-to-run instructions
+
+---
 _Updated at end of each session._
