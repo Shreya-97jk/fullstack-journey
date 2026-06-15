@@ -148,4 +148,26 @@
 - [x] backend/README.md with setup and how-to-run instructions
 
 ---
+
+## Week 2 — Day 2 (2026-06-15)
+**Status:** In Progress — continuing Day 3
+
+### Topics
+- [x] a. Big picture: route → controller → service → model. Drew ASCII flow for a POST request end-to-end
+- [x] b. MODEL: wrote `src/models/book.ts` — Book interface with all fields, optional fields with `?`, union type for status
+- [ ] c. SERVICE: in-memory array, create/findAll/findById/update/remove — starting Day 3
+- [ ] d. CONTROLLER: reads req, calls service, sends res
+- [ ] e. ROUTE: defines URL + method, wires into index.ts
+- [ ] f. Postman: test all 5 endpoints, save collection to backend/postman/
+- [ ] g. Reflection: trace a POST through every file, function by function
+
+### Key concepts understood
+- Interface = shape/type only, not data — TypeScript is compile-time only, vanishes at runtime
+- Layered architecture: each layer only knows one direction; controller never touches the array directly
+- Why separation matters: business rules live in the service, HTTP concerns live in the controller
+
+### Deliverable
+- [x] `src/models/book.ts` committed
+
+---
 _Updated at end of each session._
