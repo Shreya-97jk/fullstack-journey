@@ -150,24 +150,31 @@
 ---
 
 ## Week 2 — Day 2 (2026-06-15)
-**Status:** In Progress — continuing Day 3
+**Status:** Complete
 
 ### Topics
 - [x] a. Big picture: route → controller → service → model. Drew ASCII flow for a POST request end-to-end
 - [x] b. MODEL: wrote `src/models/book.ts` — Book interface with all fields, optional fields with `?`, union type for status
-- [ ] c. SERVICE: in-memory array, create/findAll/findById/update/remove — starting Day 3
-- [ ] d. CONTROLLER: reads req, calls service, sends res
-- [ ] e. ROUTE: defines URL + method, wires into index.ts
-- [ ] f. Postman: test all 5 endpoints, save collection to backend/postman/
-- [ ] g. Reflection: trace a POST through every file, function by function
+- [x] c. SERVICE: in-memory array, create/findAll/findById/update/remove
+- [x] d. CONTROLLER: reads req, calls service, sends res — 400 for bad id, 404 for missing book, 204 for delete
+- [x] e. ROUTE: defines URL + method, wired into index.ts via app.use('/books', bookRouter)
+- [x] f. Tested all 5 endpoints with curl — POST, GET, GET/:id, PATCH/:id, DELETE/:id all working
+- [x] g. Reflection: traced a POST through every file, function by function
 
 ### Key concepts understood
 - Interface = shape/type only, not data — TypeScript is compile-time only, vanishes at runtime
 - Layered architecture: each layer only knows one direction; controller never touches the array directly
 - Why separation matters: business rules live in the service, HTTP concerns live in the controller
+- Model layer defines shape only — service is responsible for storing and mutating data
+- 204 No Content = success with no body (correct for DELETE)
+- req.params.id is always a string — must parseInt() and check isNaN()
 
 ### Deliverable
 - [x] `src/models/book.ts` committed
+- [x] `src/services/bookService.ts` committed
+- [x] `src/controllers/bookController.ts` committed
+- [x] `src/routes/books.ts` committed
+- [x] All 5 CRUD endpoints tested and working
 
 ---
 _Updated at end of each session._
