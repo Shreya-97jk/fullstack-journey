@@ -178,3 +178,24 @@
 
 ---
 _Updated at end of each session._
+
+---
+
+## Week 2 — Day 2-3 (2026-06-25)
+**Status:** Complete
+
+### Topics
+- [x] a. Big picture: route → controller → service → model. ASCII flow for POST request
+- [x] b. MODEL: Book interface in src/models/book.ts
+- [x] c. SERVICE: in-memory array, create/findAll/findById/update/remove in src/services/bookService.ts
+- [x] d. CONTROLLER: reads req, calls service, sends res in src/controllers/bookController.ts
+- [x] e. ROUTE: defines URL + method, wired into src/index.ts via src/routes/books.ts
+- [x] f. Postman: tested all 5 endpoints (POST, GET, GET/:id, PATCH/:id, DELETE/:id)
+- [x] g. Reflection: traced POST request file by file, function by function
+
+### Quiz
+- [x] 20-question mixed quiz — Score: 20/20
+
+### Deliverable
+- [x] Full CRUD working in Postman
+- [x] 4+ commits showing layer-by-layer build
