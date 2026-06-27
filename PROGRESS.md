@@ -199,3 +199,36 @@ _Updated at end of each session._
 ### Deliverable
 - [x] Full CRUD working in Postman
 - [x] 4+ commits showing layer-by-layer build
+
+---
+
+## Week 2 — Day 4 (2026-06-27)
+**Status:** In Progress — continuing tomorrow from Section 5 (Service)
+
+### Topics
+- [x] a. What a skill IS vs asking Claude a direct question — ASCII diagram: CLAUDE.md vs .claude/skills/ vs MCP plugins
+- [x] b. Where skills live — project-scoped (.claude/skills/) vs global (~/.claude/skills/) — decision rule: "would someone cloning this repo benefit?"
+- [x] c. Anatomy of a skill — YAML frontmatter (description, allowed-tools) + markdown body. Vague vs specific instructions with real examples from the project
+- [x] d. CLAUDE.md vs skill — CLAUDE.md = always active, skill = invoked on demand
+- [x] e. Drafting .claude/skills/new-endpoint/SKILL.md — sections completed:
+  - [x] YAML frontmatter — description + allowed-tools (read, write, edit)
+  - [x] Section 2: What this skill does
+  - [x] Section 3: Before you start
+  - [x] Section 4: Step 1 Model
+- [ ] e. (continued tomorrow) Step 2 Service, Step 3 Controller, Step 4 Route, Step 5 Wire, Rules
+- [ ] f. Test the skill — scaffold a second entity
+- [ ] 20-question mixed quiz
+- [ ] Deliverable: .claude/skills/new-endpoint/SKILL.md committed
+- [ ] Deliverable: Second entity scaffolded via skill and working in Postman
+
+### Key concepts understood
+- Skill vs direct question: skills encode decisions already made so Claude doesn't guess each session
+- Vague instruction = Claude guesses. Specific instruction = consistent output every time
+- allowed-tools: read, write, edit — not bash, not run
+- CLAUDE.md enforces the principle always; skill provides exact implementation when invoked
+- File path placeholders: use [entityLower] not a hardcoded name
+- id must be number not string
+- Optional fields: just ? — no undefined | null needed
+
+---
+_Updated at end of each session._
