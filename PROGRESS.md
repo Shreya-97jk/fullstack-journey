@@ -202,33 +202,45 @@ _Updated at end of each session._
 
 ---
 
-## Week 2 — Day 4 (2026-06-27)
-**Status:** In Progress — continuing tomorrow from Section 5 (Service)
+## Week 2 — Day 4 (2026-06-28)
+**Status:** Complete
 
 ### Topics
 - [x] a. What a skill IS vs asking Claude a direct question — ASCII diagram: CLAUDE.md vs .claude/skills/ vs MCP plugins
 - [x] b. Where skills live — project-scoped (.claude/skills/) vs global (~/.claude/skills/) — decision rule: "would someone cloning this repo benefit?"
-- [x] c. Anatomy of a skill — YAML frontmatter (description, allowed-tools) + markdown body. Vague vs specific instructions with real examples from the project
-- [x] d. CLAUDE.md vs skill — CLAUDE.md = always active, skill = invoked on demand
-- [x] e. Drafting .claude/skills/new-endpoint/SKILL.md — sections completed:
+- [x] c. Anatomy of a skill — YAML frontmatter (description, allowed-tools) + markdown body (instructions). Annotated example. Vague vs specific instructions with real examples from the project
+- [x] d. CLAUDE.md vs skill — CLAUDE.md = always active, skill = invoked on demand. parseInt() rule as concrete example of same rule in both places for different reasons
+- [x] e. Drafted .claude/skills/new-endpoint/SKILL.md — all sections complete and reviewed:
   - [x] YAML frontmatter — description + allowed-tools (read, write, edit)
-  - [x] Section 2: What this skill does
-  - [x] Section 3: Before you start
-  - [x] Section 4: Step 1 Model
-- [ ] e. (continued tomorrow) Step 2 Service, Step 3 Controller, Step 4 Route, Step 5 Wire, Rules
-- [ ] f. Test the skill — scaffold a second entity
-- [ ] 20-question mixed quiz
-- [ ] Deliverable: .claude/skills/new-endpoint/SKILL.md committed
-- [ ] Deliverable: Second entity scaffolded via skill and working in Postman
+  - [x] What this skill does
+  - [x] Before you start — collect entity name, fields, optionality
+  - [x] Step 1 Model — export interface, PascalCase, id + created_at on every entity, ? for optional fields
+  - [x] Step 2 Service — named types, in-memory array, five functions with correct signatures
+  - [x] Step 3 Controller — namespace import, entity-named functions, two-line return pattern
+  - [x] Step 4 Route — namespace import, five endpoints wired
+  - [x] Step 5 Wire into index.ts — import router, app.use registration
+  - [x] Rules section
+- [x] f. Tested the skill — found 5 inconsistencies vs actual project code, edited skill to fix all of them
 
 ### Key concepts understood
 - Skill vs direct question: skills encode decisions already made so Claude doesn't guess each session
 - Vague instruction = Claude guesses. Specific instruction = consistent output every time
-- allowed-tools: read, write, edit — not bash, not run
-- CLAUDE.md enforces the principle always; skill provides exact implementation when invoked
-- File path placeholders: use [entityLower] not a hardcoded name
-- id must be number not string
-- Optional fields: just ? — no undefined | null needed
+- allowed-tools: read (reference existing files), write (create new files), edit (modify index.ts)
+- CLAUDE.md enforces the principle always; skill provides the exact implementation when invoked
+- File path placeholders: use [entityLower] not a hardcoded name so the skill works for any entity
+- id must be number not string — because parseInt() is used on it
+- Optional fields: just ? — no need for undefined | null in this project
+- Node.js is the runtime that executes the code and keeps the server listening on a port
+- Postman is a client — it sends HTTP requests to test the running server
+- Controller translates between HTTP world (req/res) and service world (plain values)
+- PUT replaces the whole object, PATCH updates only the fields sent
+- Each layer only knows the layer directly below it — never upward
+- Testing a skill matters — when output is wrong, fix the skill not the generated code
 
----
-_Updated at end of each session._
+### Deliverables
+- [x] .claude/skills/new-endpoint/SKILL.md committed
+- [x] Skill tested against real project files — 5 inconsistencies found and fixed
+- [x] Updated skill committed
+
+### Quiz
+- [x] 20-question mixed quiz — Score: 20/20
