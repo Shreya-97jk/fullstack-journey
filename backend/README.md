@@ -1,6 +1,6 @@
 # Reading Log — Backend
+This API provides a backend service to manage a digital bookshelf by allowing me to create, view, update, and delete books in a reading tracker application.
 
-Express + TypeScript REST API for the Reading Log project.
 
 ## Requirements
 - Node.js 18+
@@ -26,9 +26,11 @@ npm run start
 ```
 
 ## Endpoints
-- `GET /` — health check, returns `{ hello: "world" }`
-
-More endpoints coming as the project progresses.
+`GET /books` — Get all books.
+`GET /books/:id` — Get a single book by ID.
+`POST /books` — Add a new book.
+`PATCH /books/:id` — Update a book's status, rating, or notes.
+`DELETE /books/:id` — Remove a book from the system.
 
 ## Folder Structure
 ```
@@ -38,5 +40,5 @@ src/
 ├── controllers/    request/response handlers
 ├── services/       business logic
 ├── models/         TypeScript interfaces
-└── middleware/     cross-cutting concerns
+
 ```
