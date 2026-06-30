@@ -244,3 +244,27 @@ _Updated at end of each session._
 
 ### Quiz
 - [x] 20-question mixed quiz — Score: 20/20
+
+---
+
+## Week 2 — Day 5 (2026-06-30)
+**Status:** Complete
+### Topics
+- [x] a. File walkthrough — every file in src/, what it is and why
+- [x] b. TypeScript audit — grepped for `: any` and `as any`
+- [x] c. Commit audit — reviewed git log, identified bad commit patterns
+- [x] d. Folder hygiene — found and deleted stray files at home root
+- [x] e. README — rewrote description and full endpoint list
+### Key concepts understood
+- **In-Place Mutation:** Objects are passed by reference in JavaScript, meaning `Object.assign(target, source)` updates the target object directly without needing to return or reassign a new variable.
+- **TS Compilation Flow:** `ts-node` handles real-time execution in memory during development, while `tsc` compiles TypeScript down to production-ready JavaScript based on configurations like `target` and `outDir`.
+- **Architectural Rules:** Dependency flow must strictly move downwards (Controller -> Service -> Repository). Lower layers are forbidden from calling higher layers.
+- **Payload Validation:** `PUT` replaces a resource entirely while `PATCH` updates it partially. Forgetting data types or missing checks like `isNaN(id)` results in silent type bugs (looking for an ID of `NaN`) and misleading `404` errors instead of a clean `400 Bad Request`.
+- **Asynchronous Execution:** Omitting `await` on an async function lets the runtime skip ahead immediately, returning a pending `Promise` object wrapper instead of the actual resolved value.
+### Quiz
+- [x] 20-question technical review — Score: 17.5/20
+### Deliverables
+- [x] Fixed `PUT` route partial-override object bug.
+- [x] Cleaned root workspace: deleted stray `~/src` and `~/backend` directories.
+- [x] Fixed function name mismatches across layers (`getBooks` $\rightarrow$ `getAllBooks`, `getBook` $\rightarrow$ `getBookById`).
+- [x] Rewrote and committed updated `backend/README.md` with complete project documentation and endpoint references.
