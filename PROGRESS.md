@@ -268,3 +268,41 @@ _Updated at end of each session._
 - [x] Cleaned root workspace: deleted stray `~/src` and `~/backend` directories.
 - [x] Fixed function name mismatches across layers (`getBooks` $\rightarrow$ `getAllBooks`, `getBook` $\rightarrow$ `getBookById`).
 - [x] Rewrote and committed updated `backend/README.md` with complete project documentation and endpoint references.
+
+---
+
+cat >> PROGRESS.md << 'EOF'
+
+---
+
+## Week 3 — Day 1 (2026-07-01)
+**Status:** Complete
+
+### Topics
+- [x] a. What a relational database is — database → tables → rows → columns, ASCII diagram
+- [x] b. Primary keys — why every table needs one, uniqueness + not-null, INT/SERIAL vs UUID
+- [x] c. Foreign keys — tasks.user_id referencing users.id, ASCII diagram, REFERENCES keyword
+- [x] d. What Docker does — container = pre-configured isolated process
+- [x] e. Ran Postgres in Docker: `docker run --name pg-dev -e POSTGRES_PASSWORD=devpass -p 5432:5432 -d postgres:16` — every flag annotated, verified with `docker ps`
+- [x] f. Connected via TablePlus (host localhost, port 5432, user postgres) — created `myapp` database
+- [x] g. Hand-written SQL in GUI: CREATE TABLE, INSERT, SELECT, SELECT WHERE, UPDATE, DELETE
+- [x] h. JOIN — created `users` table, added `tasks.user_id` via ALTER TABLE with REFERENCES, ran SELECT ... JOIN ... ON
+
+### Key concepts understood
+- Primary key = a role (uniqueness + not-null), not a specific data type — usually SERIAL, sometimes UUID
+- Foreign key type must match the primary key it references
+- Docker container = isolated process bundling an app with everything it needs, sealed off from the host machine
+- `-p hostPort:containerPort` maps a container's internal port to the host machine
+- `WHERE` scopes UPDATE/DELETE/SELECT — omitting it on UPDATE/DELETE affects every row
+- JOIN combines rows from two tables using a matching column (`ON tasks.user_id = users.id`)
+- Fixed WSL integration issue in Docker Desktop settings to get `docker` command working
+- Cleaned up a stray top-level `~/backend` folder recreated by mistake — moved sql-practice.sql into the real project's backend/ folder
+
+### Quiz
+- [x] 20-question mixed quiz — Score: 19/20
+
+### Deliverables
+- [x] Postgres running in Docker (`pg-dev` container, verified with `docker ps`)
+- [x] `myapp` test database created and connected via TablePlus
+- [x] 10 SQL statements saved in `backend/sql-practice.sql` and committed
+EOF
