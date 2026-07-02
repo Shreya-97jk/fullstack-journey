@@ -306,3 +306,41 @@ cat >> PROGRESS.md << 'EOF'
 - [x] `myapp` test database created and connected via TablePlus
 - [x] 10 SQL statements saved in `backend/sql-practice.sql` and committed
 EOF
+
+---
+
+cat >> PROGRESS.md << 'EOF'
+
+---
+
+## Week 3 — Day 2 (2026-07-02)
+**Status:** Complete
+
+### Topics
+- [x] a. Three Claude Code extension points — CLAUDE.md (always-loaded rules), .claude/skills/ (invokable recipes), MCP plugins (tools that read/write external systems). ASCII diagram + reanchored using the parseInt()/isNaN() rule as an example that lives in both CLAUDE.md and the new-endpoint skill for different reasons
+- [x] b. What MCP is — Model Context Protocol, a standard for AI to talk to external systems. MCP client (the AI app, e.g. Claude Code) vs MCP server (wraps an external system, exposes tools/resources)
+- [x] c. Installed Postgres MCP — `claude mcp add postgres -- npx -y @modelcontextprotocol/server-postgres "<connection-string>"`. Fixed Docker WSL integration (toggle in Docker Desktop Settings > Resources > WSL Integration) and restarted stopped `pg-dev` container along the way
+- [x] d. Verified via MCP Inspector (`npx @modelcontextprotocol/inspector ...`) — connected, listed resources, got back `users` and `tasks` schema resources; also confirmed registered + connected inside Claude Code via `/mcp` (1 tool). Live "ask Claude in plain English" verification deferred due to API credits — carries over
+- [x] e. Decision rule quiz (5 scenarios) — 4/5 correct, corrected the "always use const not var" scenario (CLAUDE.md, not skill — it's a standing rule with no trigger, not a numbered procedure)
+
+### Key concepts understood
+- MCP servers are the only one of the three extension points that can actually reach outside the conversation — CLAUDE.md and skills only ever produce text for Claude to reason with
+- `claude mcp add` / `/mcp` status checks are local config and status reads — no API credits consumed; only a live natural-language request to Claude spends a turn
+- `claude plugin add` (marketplace bundles) and `claude mcp add` (standalone MCP server) are different commands for different things
+- MCP Inspector is a generic, LLM-free MCP client for testing a server directly — proves the server/connection work independent of Claude Code
+- Resources (read-only data, e.g. table schema) vs tools (callable actions, e.g. a query) are two different capability types a single MCP server can expose
+- Decision rule: "always behave X" → CLAUDE.md; "when asked to do X, follow these steps" → skill; "read/write an external system" → MCP plugin
+
+### Quiz
+- [x] 20-question mixed quiz — Score: 18/20
+
+### Deliverables
+- [x] Postgres MCP installed and connected in Claude Code (`postgres · connected · 1 tool`)
+- [x] Verified end-to-end via MCP Inspector (resources listed: users, tasks schemas)
+- [ ] Live "ask Claude directly" verification — carries over pending API credits
+
+## Claude Code Features In Use
+- **CLAUDE.md** — always-loaded standing rules with no trigger (e.g. never use `var`, always `parseInt()`/`isNaN()` on route params).
+- **.claude/skills/** — invoked on demand for a specific multi-step procedure (e.g. `new-endpoint` scaffolding).
+- **MCP plugins** — the only one that reaches outside the conversation to read/write a real external system (e.g. Postgres, Slack, GitHub).
+EOF
