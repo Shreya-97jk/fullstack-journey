@@ -344,3 +344,29 @@ cat >> PROGRESS.md << 'EOF'
 - **.claude/skills/** — invoked on demand for a specific multi-step procedure (e.g. `new-endpoint` scaffolding).
 - **MCP plugins** — the only one that reaches outside the conversation to read/write a real external system (e.g. Postgres, Slack, GitHub).
 EOF
+---
+
+## Week 3 — Day 3 (2026-07-02)
+**Status:** Complete
+
+### Topics
+- [x] a. What an ORM is — JS code → Prisma Client → Postgres. Problem it solves: no hand-written SQL strings, no manual row-to-object mapping, type safety instead of a hand-maintained interface that can drift from the real table
+- [x] b. Why Prisma — type-safe (generated types from schema, not hand-written), declarative schema (describe end state, Prisma computes the SQL), auto-migrations (every schema change becomes a timestamped, committed SQL file)
+- [x] c. Installed `prisma` (devDependency — CLI, dev-time only) and `@prisma/client` (real dependency — runtime import). `npx prisma init` created `prisma/schema.prisma`, `prisma.config.ts`, `.env`. Learned current Prisma versions moved the datasource URL out of `schema.prisma` into `prisma.config.ts` (loaded via `dotenv/config`)
+- [x] d. Wrote `schema.prisma` for the Book entity — decided camelCase fields + `@map` to snake_case columns (matches existing JS/TS convention while keeping SQL-style column names), converted `status` from a plain string to a Prisma `enum BookStatus` (enforces valid values at the DB level, not just in TypeScript which vanishes at runtime). Flagged that Prisma enforces shape/type only — the "rating must be 1–5" business rule still needs application-level validation
+- [x] e. Set real `DATABASE_URL` in `backend/.env` — created a dedicated `reading_log_dev` database (separate from the `myapp` scratch DB used for Day 1 SQL practice)
+- [x] f. First migration: `npx prisma migrate dev --name init` — generates real SQL into `prisma/migrations/<timestamp>_init/`, applies it, creates `_prisma_migrations` tracking table, regenerates the typed client. Verified via TablePlus (books table + BookStatus enum present, correct columns) and re-pointed the Postgres MCP server from `myapp` to `reading_log_dev` (`claude mcp remove` + `claude mcp add`), confirmed `connected` via `/mcp`. Live "ask Claude to list tables" verification deferred again — pending API credits
+
+### Key concepts understood
+- ORMs replace hand-written SQL + manual row mapping with typed function calls; Prisma generates SQL and typed objects from one schema definition
+- devDependency vs dependency: CLI tools used only at dev time (`prisma`) vs code the running server actually imports (`@prisma/client`)
+- Prisma schema enforces structure (types, nullability, enums) but never business rules (e.g. numeric ranges) — those still belong in service/controller validation
+- Enums move a validation guarantee from "TypeScript hopes you're right" to "the database physically cannot store anything else"
+- Migrations are a permanent, committed, timestamped history of every schema change — unlike Day 1's manual `ALTER TABLE`, which nothing tracked
+- A dedicated database per project (vs reusing a scratch DB) keeps real app data separate from practice data
+
+### Deliverables
+- [x] Prisma installed and configured against real Postgres (`reading_log_dev`)
+- [x] `schema.prisma` — Book model + BookStatus enum, camelCase + `@map` convention
+- [x] First migration applied and verified (TablePlus + Postgres MCP re-registered and connected)
+- [ ] Live "ask Claude directly" verification — still carries over pending API credits
