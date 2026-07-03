@@ -1,3 +1,4 @@
+import { NotFoundError } from '../errors';
 import { Request, Response } from 'express';
 import * as bookService from '../services/bookService';
 
@@ -19,8 +20,7 @@ export async function getBook(req: Request, res: Response) {
   }
   const book = await bookService.findById(id);
   if (!book) {
-    res.status(404).json({ error: 'Book not found' });
-    return;
+    throw new NotFoundError('Book not found');
   }
   res.json(book);
 }
@@ -33,8 +33,7 @@ export async function updateBook(req: Request, res: Response) {
   }
   const book = await bookService.update(id, req.body);
   if (!book) {
-    res.status(404).json({ error: 'Book not found' });
-    return;
+    throw new NotFoundError('Book not found');
   }
   res.json(book);
 }
@@ -47,8 +46,7 @@ export async function deleteBook(req: Request, res: Response) {
   }
   const deleted = await bookService.remove(id);
   if (!deleted) {
-    res.status(404).json({ error: 'Book not found' });
-    return;
+    throw new NotFoundError('Book not found');
   }
   res.status(204).send();
 }
