@@ -370,3 +370,33 @@ EOF
 - [x] `schema.prisma` — Book model + BookStatus enum, camelCase + `@map` convention
 - [x] First migration applied and verified (TablePlus + Postgres MCP re-registered and connected)
 - [ ] Live "ask Claude directly" verification — still carries over pending API credits
+
+---
+
+## Week 3 — Day 4 (2026-07-03)
+**Status:** Complete
+
+### Topics
+- [x] g. Converted every `bookService.ts` function from the in-memory array to real Prisma calls, one at a time: `findById` first (tested independently), then `create`, `findAll`, `update`, `remove`. Every controller function updated to `async`/`await` to match. Deleted the leftover `books`/`nextId` in-memory array entirely
+- [x] Hit and resolved a real chain of environment issues along the way: Prisma client never generated (`npx prisma generate`), wrong import path for the generator's actual entry point (`../generated/prisma/client`, no `index.ts`/`package.json` in the output folder), `tsconfig.json` rejecting `prisma.config.ts` outside `rootDir` (fixed with explicit `"include": ["src/**/*"]`), and `PrismaClient` requiring a driver adapter (`@prisma/adapter-pg` + `PrismaPg`) rather than a bare connection string
+- [x] Real architecture decision: hand-written `Book` interface vs Prisma-generated `Book` type diverged (camelCase vs snake_case, `Date` vs string, enum casing). Chose Option B — a translation layer (`toBook`/`toApiStatus`/`toPrismaStatus` mapper functions) in the service, keeping the public API contract stable and independent of the database schema, per the existing layered-architecture principle (business/shape logic lives in the service)
+- [x] h. Confirmed `PROJECT.md` only defines one entity (`Book`) — no "remaining entities" to add today. Deferred adding a new entity to a future session (carryover)
+- [x] Updated `.claude/skills/new-endpoint/SKILL.md` for Prisma — added a new Step 1 (Prisma schema model + manual migration reminder), rewrote Step 2/3 (TS model as stable public contract, Prisma-backed async service with mapper functions), updated the controller step and rules for async/await and enum mapping
+
+### Key concepts understood
+- Converting one function to `async` ripples to every caller — a real, live example of why layered architecture (each layer only knows the layer below it) matters when something changes
+- A function can compile cleanly and still be silently broken — `Object.assign` on a Prisma-returned object never persists anything, because that object has no live connection to the database
+- `findUnique` returns `null` on a miss; `update`/`delete` throw instead — always check existence first before calling either
+- Driver adapters are a newer Prisma pattern: the client needs an explicit adapter object wrapping the real DB driver, not just an env var, depending on the generator
+- A translation/mapper layer at the service boundary decouples the public API from the database schema — schema changes stop being breaking changes for API consumers
+- Skills need updating whenever the underlying architecture they scaffold changes — an out-of-date skill would have kept generating in-memory code forever
+
+### Quiz
+- [x] 20-question mixed quiz — Score: 18.5/20
+
+### Deliverables
+- [x] All `Book` CRUD operations backed by real Postgres via Prisma — in-memory array fully removed
+- [x] Every endpoint verified working in Postman against real Postgres (`POST`, `GET`, `GET/:id`, `PATCH/:id`, `DELETE/:id`)
+- [x] `.claude/skills/new-endpoint/SKILL.md` updated for Prisma
+- [ ] Add a second entity — carries over to a future session
+- [ ] Live "ask Claude directly" MCP verification — still carries over pending API credits
