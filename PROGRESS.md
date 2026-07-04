@@ -440,3 +440,34 @@ EOF
 - [x] `errors.ts` and `errorHandler.ts` committed, global error handling working across all endpoints
 - [x] `pino` + `pino-http` structured logging verified working end-to-end
 - [x] All 5 breakage scenarios tested and confirmed correct behavior
+
+---
+
+## Week 3 — Day 6 (2026-07-04)
+**Status:** Complete
+
+### Topics
+- [x] a. The secrets-in-source-code problem — bots scrape every public GitHub commit in real time, scanning for leaked secrets; a real AWS key can be found and exploited within minutes of being pushed, even if deleted moments later (it still lives in git history)
+- [x] b. The 12-factor approach — config lives in the environment, not in code. ASCII diagram: source code reads from `process.env`, which is filled locally by a `.env` file or in production by a cloud secret manager. Distinguished `.env` (a file on disk) from `process.env` (in-memory, filled by `dotenv` at runtime) using a fridge/shopping-list analogy
+- [x] c. Installed `dotenv` as an explicit dependency — discovered it was previously only present as an undeclared transitive dependency (pulled in silently by `prisma`), which was fragile. Moved `import 'dotenv/config'` to be the literal first line of `src/index.ts`, ahead of all other imports, so nothing can read `process.env` before it's filled
+- [x] d. Added `PORT` and `JWT_SECRET` to `backend/.env` alongside existing `DATABASE_URL`. Generated `JWT_SECRET` with `openssl rand -base64 32`. Fixed a hardcoded `const PORT = 3000` to `const PORT = process.env.PORT || 3000`, actually wiring it to the environment
+- [x] e. Verified `.env` does not appear in `git status` output — confirmed it's correctly gitignored
+- [x] f. Created `backend/.env.example` with the same keys as `.env` but placeholder values and a header comment — this file IS committed, documenting required config for anyone cloning the repo
+- [x] g. Verified fail behavior: renamed `.env` away and found the app did NOT fail loudly — it started normally and then hung indefinitely on any real request with zero error output on either side. Built a startup validation check (loops over required env vars right after `dotenv/config` loads, calls `process.exit(1)` with a clear message if any are missing) — confirmed it now crashes instantly and loudly with `Missing required environment variable: DATABASE_URL` instead of hanging. Restored `.env` and confirmed the app runs normally again
+
+### Key concepts understood
+- `.env` is a file on disk; `process.env` is in-memory data attached to the running process — `dotenv` is the bridge that copies one into the other at startup
+- Relying on an undeclared transitive dependency (present in `node_modules` only because another package needs it) is fragile — always declare what your own code actually imports
+- Import order matters for anything reading `process.env` at module load time — `dotenv/config` must run first, guaranteed
+- The 12-factor principle: code stays identical across environments; only *where the environment variables come from* changes (`.env` locally, a cloud secret manager in production)
+- `.env` (real secrets, gitignored) vs `.env.example` (placeholder values, committed) — the latter documents required config without exposing anything
+- A missing required config value can fail in far worse ways than a clean error — in this case, a silent indefinite hang with no error on either the client or server side — which is why explicit startup validation matters more than assuming a dependency will "fail loudly" on its own
+- Recurring lesson (again) from stale process debugging: always verify no old `nodemon`/`ts-node` processes are still bound to port 3000 before trusting a test result
+
+### Quiz
+- [x] 20-question mixed quiz — Score: 19/20
+
+### Deliverables
+- [x] All secrets (`DATABASE_URL`, `PORT`, `JWT_SECRET`) in `backend/.env`, confirmed gitignored
+- [x] `backend/.env.example` created and committed with placeholder values
+- [x] Startup environment-variable validation added to `src/index.ts` — app now fails immediately and loudly when required config is missing, instead of hanging
