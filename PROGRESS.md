@@ -471,3 +471,36 @@ EOF
 - [x] All secrets (`DATABASE_URL`, `PORT`, `JWT_SECRET`) in `backend/.env`, confirmed gitignored
 - [x] `backend/.env.example` created and committed with placeholder values
 - [x] Startup environment-variable validation added to `src/index.ts` — app now fails immediately and loudly when required config is missing, instead of hanging
+
+---
+
+## Week 4 — Day 1 (2026-07-05)
+**Status:** Complete
+
+### Topics
+- [x] a. Set up Vite + React + TS (`npm create vite@latest frontend -- --template react-ts`, ESLint as linter). Walked through the three core files: `index.html` (single real HTML page, empty `<div id="root">` as the injection point), `src/main.tsx` (`createRoot` + `.render(<App />)` bridges plain HTML to React, `<StrictMode>` is a dev-only double-invocation safety net with no visible UI), `src/App.tsx` (the root component)
+- [x] b. What a component is — just a JavaScript function returning JSX. ASCII tree for the real project: `App → Header / TaskList → TaskItem` (repeated once per book), mirroring the same "each layer only knows the layer below it" principle from the backend's route → controller → service chain
+- [x] c. JSX — looks like HTML, compiles to JavaScript. Key differences from real HTML: `className` instead of `class` (reserved word collision), camelCase attributes (`onClick`, not `onclick`), and `{}` for embedding live JavaScript expressions directly in markup
+- [x] d. Props — parent-to-child data only, one direction, read-only from the child's side. Built a typed `Greeting` component (`GreetingProps` interface + destructured `{ name }` param) and rendered it with `<Greeting name="Shreya" />`
+- [x] e. `useState` — `const [count, setCount] = useState(0)`: value + setter pair; calling the setter both updates the value and triggers a re-render. Built a `Counter` component in `src/scratch.tsx`, confirmed clicking updates the displayed count live in the browser
+- [x] f. `useEffect` — runs side effects (fetching, logging, timers) after React draws the component, not during. Empty dependency array `[]` = run once on mount only. Built an `EffectDemo` component that logs on mount; observed it logging twice due to `<StrictMode>`'s intentional double-invocation in development (not a bug)
+- [x] g. Conditional rendering — the ternary pattern `{condition ? <A /> : <B />}` inside JSX. Built a `LoadingDemo` component toggling between "Loading..." and "Data loaded!" via a boolean state flip (`setIsLoading(!isLoading)`)
+- [x] h. List rendering — `array.map(item => <li key={item.id}>...)`. Connected directly back to Week 1 Day 5's array methods (`map`/`filter`/`find`/`forEach`/`reduce`) as the same underlying method, just producing JSX instead of transformed data. Discussed why `key` must be a stable unique ID (e.g. `book.id`) rather than array index — React uses it to track which specific item is which across re-renders, avoiding bugs when lists reorder or change
+
+### Key concepts understood
+- A component is a plain JavaScript function; JSX is what it returns, not real HTML — it compiles down to JavaScript function calls
+- `className`/camelCase props exist specifically to avoid colliding with JavaScript's own reserved words and naming conventions
+- Event handlers must be passed as function *definitions* (`() => doThing()`), not function *calls* (`doThing()`) — calling directly during render can cause infinite render loops if it also triggers a state update
+- Props flow one direction (parent → child) and are read-only from the receiving component's side — matches the "each layer only knows what's below it" principle already used in the backend
+- `useState`'s setter is what triggers a re-render — directly mutating the state variable does nothing, since React never finds out about it
+- `useEffect`'s dependency array controls timing: `[]` = once on mount, `[value]` = on mount and whenever `value` changes, no array = every render (rarely desired)
+- `<StrictMode>` intentionally double-invokes certain code in development only, to surface effects that aren't safe to run more than once — not a bug, no effect on production builds
+- `key` in list rendering exists so React can track individual item identity across re-renders; using array index breaks this guarantee once a list can reorder or have items inserted/removed from the middle
+- Caught and fixed a real mistake independently: a missing self-closing `/>` on `<BookList` caused a JSX syntax error, found via the Problems panel and console
+
+### Quiz
+- [x] 20-question mixed quiz — Score: 19.5/20
+
+### Deliverable
+- [x] Working Vite + React + TS project (`frontend/`) committed
+- [x] Multiple custom components visible and functioning in the browser: `Greeting` (props), `Counter` (useState), `EffectDemo` (useEffect), `LoadingDemo` (conditional rendering), `BookList` (list rendering with keys)
