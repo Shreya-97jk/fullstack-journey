@@ -504,3 +504,26 @@ EOF
 ### Deliverable
 - [x] Working Vite + React + TS project (`frontend/`) committed
 - [x] Multiple custom components visible and functioning in the browser: `Greeting` (props), `Counter` (useState), `EffectDemo` (useEffect), `LoadingDemo` (conditional rendering), `BookList` (list rendering with keys)
+
+---
+
+## Week 4 — Day 2 (2026-07-06)
+**Status:** Complete
+
+### Topics
+- [x] a. Two-terminal workflow — backend (Express, port 3000) and frontend (Vite/React, port 5173) run as separate simultaneous processes
+- [x] b. `fetch` API basics — `fetch()` only rejects on network failure, not on HTTP error codes; must manually check `res.ok` and `throw` for non-2xx responses; `res.json()` parses the body
+- [x] c. CORS — first real encounter. Browser blocked `fetch('http://localhost:3000/books')` from origin `localhost:5173` with "No 'Access-Control-Allow-Origin' header" even though the backend logged a real `200` response, proving the block is purely browser-side, not a server failure. Installed `cors`, wired `app.use(cors({ origin: 'http://localhost:5173' }))` into `src/index.ts`, deliberately allowlisting the exact frontend origin instead of using `origin: '*'`
+- [x] d. Loading and error states — added `loading`/`error` state to `BookList.tsx` via `useState`, wrapped the fetch in `try/catch/finally`: `try` does the fetch and throws on `!res.ok`, `catch` sets a user-facing error message, `finally` always runs last and turns off loading regardless of outcome. States declared but not yet wired into JSX — deferred to Day 3 when building the real list page UI
+
+### Key concepts understood
+- `fetch` resolving on HTTP error codes (400s/500s) is a common gotcha — always check `res.ok` explicitly
+- CORS is a browser-enforced security policy, not a server-side restriction — the server can respond fine while the browser still blocks JS from reading it
+- Allowlisting an exact origin is safer than `origin: '*'`, which would let any website read the API's responses
+- The loading/error/success pattern is a three-state state machine driven by `try/catch/finally`, not just a single boolean
+- Hit and fixed a real environment bug: Node v24.16.0 (very new, non-LTS) crashed Vite/esbuild with "Illegal instruction" in WSL — fixed by switching to Node LTS v22 via `nvm install 22`, `nvm use 22`, and `nvm alias default 22` to persist it across all future terminals
+
+### Deliverable
+- [x] Frontend successfully fetches real data from the backend across origins, CORS correctly configured
+- [x] Loading/error state scaffolding in place in `BookList.tsx` (JSX wiring carries over to Day 3)
+- [ ] Full deliverable (view/create/edit from React UI) — carries over to Day 3

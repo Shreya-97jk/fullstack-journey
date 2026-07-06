@@ -1,13 +1,8 @@
-import Greeting from './scratch';
-import { Counter, EffectDemo, LoadingDemo, BookList } from './scratch';
+import BookList from './components/BookList';
 
 function App() {
   return (
     <div>
-      <Greeting name="Shreya" />
-      <Counter />
-      <EffectDemo />
-      <LoadingDemo />
       <BookList />
     </div>
   );

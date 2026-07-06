@@ -1,4 +1,5 @@
 import 'dotenv/config';
+import cors from 'cors';
 
 const requiredEnvVars = ['DATABASE_URL', 'PORT', 'JWT_SECRET'];
 for (const key of requiredEnvVars) {
@@ -14,6 +15,7 @@ import express from 'express';
 import bookRouter from './routes/books';
 
 const app = express();
+app.use(cors({ origin: 'http://localhost:5173' }));
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
