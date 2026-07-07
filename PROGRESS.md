@@ -527,3 +527,29 @@ EOF
 - [x] Frontend successfully fetches real data from the backend across origins, CORS correctly configured
 - [x] Loading/error state scaffolding in place in `BookList.tsx` (JSX wiring carries over to Day 3)
 - [ ] Full deliverable (view/create/edit from React UI) — carries over to Day 3
+
+---
+
+## Week 4 — Day 3 (2026-07-07)
+**Status:** Complete
+
+### Topics
+- [x] e. List page — wired `loading`/`error` state into actual JSX using early returns: `if (loading) return <p>Loading books...</p>`, `if (error) return <p>{error}</p>`, otherwise render the real list. Loading is checked before error since the flow naturally progresses loading → error → success
+- [x] f. Create form — built `BookForm.tsx` with controlled inputs (`value` + `onChange` tied to `useState` per field) and a `handleSubmit` that calls `e.preventDefault()` then POSTs to the backend. Hit and fixed a real 400 error: backend's `createBookSchema` requires `status` (no `.optional()`), which the form wasn't sending — added a `<select>` for status, also a controlled input
+- [x] g. Edit page — introduced lifting state up: `editingBookId` lives in `App.tsx` (the shared parent), passed down to `BookList` as a setter function (`onEditBook={setEditingBookId}`) and to a new `BookEditForm` component as a prop. `BookEditForm` fetches the book's current data on mount via `useEffect` with `[bookId]` as its dependency (so it re-fetches whenever a different book is selected), pre-fills the form, and PATCHes on submit
+
+### Key concepts understood
+- Early returns let one component render entirely different UI depending on state, without nested ternaries — React stops at whichever `return` it hits first
+- Controlled inputs: an `<input>`'s `value` is driven by React state, and `onChange` is what closes the loop — without it, the field is effectively read-only since React overrides any typed input back to the unchanged state value
+- Zod schema requirements aren't visible from the frontend — a field missing `.optional()` on the backend will silently reject a request that looks complete from the form's perspective, surfaced only via the actual HTTP status code
+- Lifting state up: when two sibling components need to share or coordinate data, the state has to live in their nearest common parent, which passes it down as props (including setter functions passed directly as callbacks)
+- `useEffect`'s dependency array isn't just "run once vs. every render" — including a specific value like `[bookId]` means "re-run whenever this value changes," which matters when the same component is reused for different data
+- Hit and resolved a second real environment issue: even after fixing Node 22 once, the exact same cached binary reappeared corrupted on a new terminal session (`Missing internal module` in Node's built-in `undici`). Fixed by clearing both `~/.nvm/.cache` and the installed `~/.nvm/versions/node/v22.23.1` folder to force a genuinely fresh download, rather than trusting nvm's cache
+
+### Quiz
+- [x] 20-question mixed quiz — Score: 18/20
+
+### Deliverable
+- [x] Full view/create/edit of `Book` entity working end-to-end through the React UI (`BookList`, `BookForm`, `BookEditForm`)
+- [x] Loading and error states visibly working (early-return pattern in `BookList`)
+- [x] Backend validation errors traced to root cause (missing required Zod field) and fixed on the frontend
