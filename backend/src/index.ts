@@ -13,7 +13,7 @@ import pinoHttp from 'pino-http';
 import { errorHandler } from './middleware/errorHandler';
 import express from 'express';
 import bookRouter from './routes/books';
-
+import authRouter from './routes/auth';
 const app = express();
 app.use(cors({ origin: 'http://localhost:5173' }));
 const PORT = process.env.PORT || 3000;
@@ -21,6 +21,7 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(pinoHttp());
 app.use('/books', bookRouter);
+app.use('/auth', authRouter);
 app.use(errorHandler);
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

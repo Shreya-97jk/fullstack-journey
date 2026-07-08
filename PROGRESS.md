@@ -553,3 +553,33 @@ EOF
 - [x] Full view/create/edit of `Book` entity working end-to-end through the React UI (`BookList`, `BookForm`, `BookEditForm`)
 - [x] Loading and error states visibly working (early-return pattern in `BookList`)
 - [x] Backend validation errors traced to root cause (missing required Zod field) and fixed on the frontend
+
+---
+
+## Week 4 — Day 4 (2026-07-08)
+**Status:** In progress (topics h–j, quiz, and deliverable carry over to next session)
+
+### Topics
+- [x] a. The plaintext password problem — why storing real passwords is dangerous: a DB leak exposes every password directly, and since people reuse passwords across sites, one leak can compromise a user's accounts elsewhere. Responsibility for this sits with the developer, not the user
+- [x] b. bcrypt — a one-way function: easy to hash forward, infeasible to reverse. Installed `bcrypt` + `@types/bcrypt`. Learned bcrypt automatically salts each hash, so identical passwords never produce identical hashes, defeating precomputed rainbow-table attacks. Login never reverses a hash — it re-hashes the login attempt and compares (`bcrypt.compare`)
+- [x] c. JWTs — three parts (header.payload.signature), signed but NOT encrypted, meaning anyone can decode and read the payload; only the signature (made with a server-only secret) prevents forgery. Installed `jsonwebtoken` + `@types/jsonwebtoken`
+- [x] d. Drew the full auth flow on paper before writing any code: signup (hash + store), login (compare + issue token), authenticated request (verify token → attach user → continue, or 401)
+- [x] e. Added `User` model to `schema.prisma` (`id`, `email` with `@unique`, `password` mapped to `password_hash` column, `createdAt`), migrated successfully (`add_user`)
+- [x] f. Built `POST /auth/signup` — service hashes the password with `bcrypt.hash(password, 10)`, stores the user, returns only `{ id, email }` (never the hash). Verified via Postman (`201 Created`) and confirmed directly in Postgres that the stored value is a real bcrypt hash (`$2b$10$...`), not plaintext
+- [x] g. Built `POST /auth/login` — looks up user by email, compares password with `bcrypt.compare`, issues a JWT via `jwt.sign({ userId }, JWT_SECRET, { expiresIn: '1h' })` on success. Both "no such user" and "wrong password" throw the same generic error, so the endpoint can't be used to discover which emails are registered. Verified via Postman (`200 OK` with a real token) and decoded the token at jwt.io to confirm the payload (`userId`, `iat`, `exp`) is fully readable without the secret — proving JWTs are signed, not encrypted
+
+### Key concepts understood
+- Storing plaintext passwords means a single database leak exposes not just your app, but potentially every other site where a user reused that password
+- bcrypt's salting means the same password produces a different hash every time it's hashed, closing off rainbow-table lookups entirely
+- JWTs are readable by anyone holding them but forgeable by no one without the signing secret — never put sensitive data in the payload
+- Returning the same generic error for "no such user" and "wrong password" prevents account enumeration through the login endpoint
+- Reused the project's existing shared Prisma client (`../lib/prisma`, with its driver adapter already configured) instead of creating a second, unconfigured `PrismaClient` instance — new files should plug into established patterns rather than reinvent them
+- Hit two small environment snags: Postgres container needing a manual restart before migrating, and an incorrect import path for `AuthError` (traced with `grep` to its real location in `src/errors.ts`)
+
+### Quiz
+- [ ] 20-question mixed quiz — carries over to next session
+
+### Deliverable
+- [x] `POST /auth/signup` working end-to-end, passwords confirmed hashed in the database
+- [x] `POST /auth/login` working end-to-end, issuing a valid, decodable JWT
+- [ ] `requireAuth` middleware, frontend signup/login/logout, and full protected-route testing — carry over to next session
