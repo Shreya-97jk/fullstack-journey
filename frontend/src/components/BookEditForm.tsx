@@ -12,7 +12,11 @@ function BookEditForm({ bookId, onDone }: BookEditFormProps) {
 
   useEffect(() => {
     async function loadBook() {
-      const res = await fetch(`http://localhost:3000/books/${bookId}`);
+      const res = await fetch(`http://localhost:3000/books/${bookId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
       const data = await res.json();
       setTitle(data.title);
       setAuthor(data.author);
@@ -27,7 +31,10 @@ function BookEditForm({ bookId, onDone }: BookEditFormProps) {
 
     await fetch(`http://localhost:3000/books/${bookId}`, {
       method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
       body: JSON.stringify({ title, author, status }),
     });
 

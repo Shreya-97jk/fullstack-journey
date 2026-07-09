@@ -557,7 +557,7 @@ EOF
 ---
 
 ## Week 4 — Day 4 (2026-07-08)
-**Status:** In progress (topics h–j, quiz, and deliverable carry over to next session)
+**Status:** Complete
 
 ### Topics
 - [x] a. The plaintext password problem — why storing real passwords is dangerous: a DB leak exposes every password directly, and since people reuse passwords across sites, one leak can compromise a user's accounts elsewhere. Responsibility for this sits with the developer, not the user
@@ -567,7 +567,9 @@ EOF
 - [x] e. Added `User` model to `schema.prisma` (`id`, `email` with `@unique`, `password` mapped to `password_hash` column, `createdAt`), migrated successfully (`add_user`)
 - [x] f. Built `POST /auth/signup` — service hashes the password with `bcrypt.hash(password, 10)`, stores the user, returns only `{ id, email }` (never the hash). Verified via Postman (`201 Created`) and confirmed directly in Postgres that the stored value is a real bcrypt hash (`$2b$10$...`), not plaintext
 - [x] g. Built `POST /auth/login` — looks up user by email, compares password with `bcrypt.compare`, issues a JWT via `jwt.sign({ userId }, JWT_SECRET, { expiresIn: '1h' })` on success. Both "no such user" and "wrong password" throw the same generic error, so the endpoint can't be used to discover which emails are registered. Verified via Postman (`200 OK` with a real token) and decoded the token at jwt.io to confirm the payload (`userId`, `iat`, `exp`) is fully readable without the secret — proving JWTs are signed, not encrypted
-
+- [x] h. Built `requireAuth` middleware — reads the `Authorization: Bearer <token>` header, verifies the JWT with `jwt.verify`, attaches `userId` to the request on success, returns 401 on missing/invalid/expired tokens. Applied via `router.use(requireAuth)` in `books.ts` so all book routes are protected. Verified: no token → 401, valid token → 200 with book data.
+- [x] i. Built frontend auth: `LoginForm` and `SignupForm` components (controlled inputs, POST to `/auth/login` and `/auth/signup`), stored the JWT in `localStorage` (not `useState`, so it survives page refresh), added a login gate in `App.tsx` that checks `localStorage.getItem('token')` to decide whether to show the auth screens or the book app. Wired the `Authorization: Bearer <token>` header into every existing fetch call across `BookList`, `BookForm`, and `BookEditForm`.
+- [x] j. Built logout — clears the token from `localStorage` and flips `isLoggedIn` back to false, kicking the user back to the login screen.
 ### Key concepts understood
 - Storing plaintext passwords means a single database leak exposes not just your app, but potentially every other site where a user reused that password
 - bcrypt's salting means the same password produces a different hash every time it's hashed, closing off rainbow-table lookups entirely
@@ -577,9 +579,9 @@ EOF
 - Hit two small environment snags: Postgres container needing a manual restart before migrating, and an incorrect import path for `AuthError` (traced with `grep` to its real location in `src/errors.ts`)
 
 ### Quiz
-- [ ] 20-question mixed quiz — carries over to next session
+- [x] 20-question mixed quiz — 20/20
 
 ### Deliverable
 - [x] `POST /auth/signup` working end-to-end, passwords confirmed hashed in the database
 - [x] `POST /auth/login` working end-to-end, issuing a valid, decodable JWT
-- [ ] `requireAuth` middleware, frontend signup/login/logout, and full protected-route testing — carry over to next session
+- [x] `requireAuth` middleware protecting all book routes, frontend signup/login/logout fully wired, full protected-route testing verified (signup new user → login → view/add/edit books blocked without valid token → logout)
