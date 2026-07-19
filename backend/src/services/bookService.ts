@@ -13,6 +13,7 @@ function toPrismaStatus(status: Book['status']): PrismaBook['status'] {
     case 'want-to-read': return 'WANT_TO_READ';
     case 'reading': return 'READING';
     case 'finished': return 'FINISHED';
+    default: throw new Error(`Invalid status: ${status}`);
   }
 }
 function toBook(row: PrismaBook): Book {
@@ -55,7 +56,7 @@ export async function findAll(status?: string): Promise<Book[]> {
 }
 
 export async function findById(id: number): Promise<Book | null> {
-  const row = await prisma.book.findUnique({ where: { id } });
+ const row = await prisma.book.findUnique({ where: { id } });
   return row ? toBook(row) : null;
 }
 

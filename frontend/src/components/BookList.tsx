@@ -14,10 +14,10 @@ function BookList({ onEditBook }: BookListProps) {
     async function loadBooks() {
       try {
         const res = await fetch('http://localhost:3000/books', {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-        });
+  headers: {
+    Authorization: `Bearer ${localStorage.getItem('token')}`,
+  },
+});
         if (!res.ok) throw new Error('Failed to fetch books');
         const data = await res.json();
         setBooks(data);

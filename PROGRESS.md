@@ -587,13 +587,16 @@ EOF
 - [x] `requireAuth` middleware protecting all book routes, frontend signup/login/logout fully wired, full protected-route testing verified (signup new user → login → view/add/edit books blocked without valid token → logout)
 
 ## Week 4 — Day 5 (2026-07-09)
-**Status:** In progress (topics e–g, quiz, and deliverable carry over to next session)
+**Status:** Complete
 
 ### Topics
 - [x] a. Browser DevTools — Network tab. Inspected a real failing request (expired JWT → 401 on GET /books): checked General (method, URL, status), Request Headers (saw the actual stale Authorization token being sent), Response body (`{"error":"Invalid or expired token"}`), and Timing breakdown.
 - [x] b. Browser Console. Read the same 401 surfaced automatically as a red error with a clickable file:line link (BookList.tsx:16). Learned failed HTTP responses don't always produce a JS stack trace — only real thrown errors do — and that when they do, read top-to-bottom starting at the top (innermost frame).
 - [x] c. React DevTools extension — installed from Chrome Web Store, inspected the live component tree (App → BookForm, BookList) and BookList's actual props/state/hooks (books: [], loading: false, error: "Could not load books.") without adding any console.log.
 - [x] d. VS Code debugger — discovered the project wasn't opened as a folder (explains an earlier full-path tab bug), fixed by opening ~/projects/fullstack-journey as the workspace root. Created `.vscode/launch.json` with a Node config using `ts-node/register` to run `backend/src/index.ts` directly with `.env` loaded. Set a breakpoint in `bookController.ts`'s `getBook`, hit it from Postman (GET /books/2 with a fresh Bearer token), confirmed execution paused, inspected `id` and `book` live in the Variables panel, stepped over, and resumed to let the request complete. Along the way, hit and diagnosed a real bug: two backend processes both trying to bind port 3000 (old `npm run dev` terminal + new debug session) causing requests to nondeterministically hit the wrong one; fixed by stopping the old terminal.
+- [x] e. Read pino logs alongside a live browser failure (expired JWT → 401), correlating the Network tab's total round-trip time with pino's server-side `responseTime` to see where time was actually being spent.
+- [x] f. Debugging methodology (WHERE → WHAT request → WHAT response → WHAT logs → reproduce/fix), applied live to a real signup 500 error (Postgres container not running) and a real duplicate-email 409-ish case — both diagnosed and fixed using the checklist rather than guesswork.
+- [x] g. Five deliberate bugs, each found with the correct tool: wrong URL → 404 (Network tab), missing auth header → 401 (Network tab), off-by-one in `bookService.findById` → 200 OK with wrong data (manual response inspection, not status code), weakened Zod validation → silent data corruption via missing `switch` default (response inspection + code reading), missing `JWT_SECRET` → crash on startup (terminal output alone).
 
 ### Key concepts understood
 - The Network tab shows what the browser sent/received; the Console shows what the frontend JS did with it; React DevTools shows what React itself believes the component's state to be — three different layers of the same problem
@@ -602,8 +605,7 @@ EOF
 - Running two servers on the same port simultaneously can silently misroute requests instead of erroring outright, especially across IPv4/IPv6 differences under WSL2
 
 ### Quiz
-- [ ] 20-question mixed quiz — carries over to next session
+- [x] 20-question mixed quiz — 20/20
 
 ### Deliverable
-- [x] VS Code debugger configured and verified working end-to-end (breakpoint hit, stepped, resumed)
-- [ ] 5 deliberate bugs found using the right tool — carries over to next session
+- [x] VS Code debugger configured and verified; all 5 deliberate bugs found using the correct tool and fixed
