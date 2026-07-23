@@ -640,3 +640,39 @@ EOF
 ### Deliverable
 - [x] 9 tests passing on a clean run (5 unit tests in `bookService.test.ts`, 4 integration tests in `app.test.ts`, plus 2 more of each type)
 - [x] One full intentional break-and-fix cycle demonstrated (plus a second, unplanned one)
+
+## Week 5 — Day 3 (2026-07-23)
+**Status:** Complete
+
+### Topics
+- [x] a. What the GitHub MCP adds — listing/summarizing commits, reading diffs, drafting commit messages and PR descriptions, creating branches, opening PRs, directly from a Claude Code session
+- [x] b. Mental model reinforcement — installing an MCP plugin does not replace CLAUDE.md or skills; all three extension points do different jobs and coexist (CLAUDE.md = always-on rules, skills = on-demand recipes, MCP = the only one that reaches an external system)
+- [x] c. Ran `claude plugin --help` to confirm current syntax, then `claude plugin install github` — installed `github@claude-plugins-official`. Confirmed via `claude plugin details github`: official GitHub MCP server, 1 MCP server bundled, 0 skills/agents/hooks
+- [x] d. Created a GitHub PAT (classic) with minimum scopes only — `repo` and `read:org`, 90-day expiration. Stored as `GITHUB_PERSONAL_ACCESS_TOKEN` in `~/.bashrc` (edited via the code editor, not typed directly into the terminal, to avoid it landing in `~/.bash_history`), loaded with `source ~/.bashrc`, verified set without printing the value
+- [x] e. Verified connection via `/mcp` inside a Claude Code session: `plugin:github:github · connected · 44 tools`, alongside the existing `postgres` MCP. Live "ask Claude directly" query verification carried over pending API credits (same recurring situation as the Postgres MCP verification in Week 3 Day 2) — local connection status confirms correct install/auth without spending credits
+- [x] f. Discussed intended ongoing use for the rest of the week: drafting commit messages from real diffs, summarizing PRs — to be used once credits are available
+
+### Key concepts understood
+- Installing an MCP plugin doesn't retire CLAUDE.md or skills — three extension points, three different jobs, all active simultaneously
+- `claude plugin install` (packaged bundle, can include MCP + skills + hooks together) vs `claude mcp add` (a single standalone MCP server) — different commands for different distribution mechanisms
+- Principle of least privilege: grant a token only the scopes it actually needs (`repo`, `read:org`), not everything available — limits the blast radius if the token ever leaks
+- Never type a secret directly as a terminal command (`export TOKEN="..."`) — it gets saved in plaintext in `~/.bash_history`; edit the config file directly in an editor instead
+- Give tokens an expiration date so a leaked/forgotten credential has a limited window of danger, not indefinite access
+- Checking `/mcp` status is a local, no-cost operation; actually invoking a tool via a real question to Claude Code is what consumes API credits
+- Official marketplace plugins (`claude-plugins-official`) carry more trust than arbitrary third-party sources — maintained and audited, lower risk of malicious code
+
+### Quiz
+- [x] 20-question mixed quiz — Score: 20/20
+
+### Deliverable
+- [x] GitHub MCP plugin installed and connection verified (`connected · 44 tools` via `/mcp`)
+- [x] PAT created with minimum scopes, stored as `GITHUB_PERSONAL_ACCESS_TOKEN` env var, never committed to code
+- [ ] Live "ask Claude directly" query verification — carries over pending API credits
+- [x] "Claude Code Features In Use" section updated (see below)
+
+## Claude Code Features In Use
+- **CLAUDE.md** — always-loaded standing rules with no trigger (e.g. never use `var`, always `parseInt()`/`isNaN()` on route params).
+- **.claude/skills/** — invoked on demand for a specific multi-step procedure (e.g. `new-endpoint` scaffolding).
+- **MCP plugins** — the only one that reaches outside the conversation to read/write a real external system:
+  - `postgres` — direct database queries against `reading_log_dev`
+  - `github` (`github@claude-plugins-official`) — repository management: commits, diffs, branches, PRs, directly from a Claude Code session
