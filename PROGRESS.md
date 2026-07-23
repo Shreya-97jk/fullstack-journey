@@ -609,3 +609,34 @@ EOF
 
 ### Deliverable
 - [x] VS Code debugger configured and verified; all 5 deliberate bugs found using the correct tool and fixed
+
+
+## Week 5 — Day 1-2 (2026-07-23)
+**Status:** Complete
+
+### Topics
+- [x] a. What tests are — the feedback loop (code change → run tests → green/red), tests catch regressions automatically instead of relying on remembering to manually re-check old functionality
+- [x] b. What to test vs not — service-layer business logic and endpoint behavior (own code, real branching), not third-party libraries (bcrypt, Prisma) or trivial pass-through code. Goal is catching regressions, not chasing coverage numbers
+- [x] c. Installed Vitest (`npm i -D vitest @types/node`), added `"test": "vitest"` script, ran in watch mode. Hit and fixed a real stray `node_modules`/`package.json` accidentally created in the home directory from running `npm i` outside the project folder
+- [x] d. First unit test: exported `toApiStatus` from `bookService.ts`, wrote `describe`/`it`/`expect` test, watched it pass, deliberately broke the implementation (typo'd return value), watched it fail with a precise expected-vs-received diff, fixed it, watched it pass again
+- [x] e. Installed supertest (`npm i -D supertest @types/supertest`) — tests the Express `app` object directly in memory, no real network/port involved. Refactored `index.ts` into `app.ts` (builds and exports the Express app, no `.listen()`) + a thin `index.ts` (imports `app`, calls `.listen()`) — necessary so test files can import the app without starting a real second server
+- [x] f. Wrote 4 integration tests in `app.test.ts`: `GET /books` returns 401 without auth, `GET /books` returns 200 + array with a valid token, `POST /books` with valid body returns 201, `POST /books` with invalid body returns 400. Used `beforeAll` to sign up and log in a fresh test user once per describe block and reuse the token. Diagnosed a real bug along the way using the prior debugging methodology: Postgres (`pg-dev`) wasn't running, causing login to fail and `Authorization: Bearer undefined` to be sent
+- [x] g. Intentional regression: broke `createBook`'s status code, which accidentally also deleted the `const book = await bookService.create(req.body)` line, causing a real `ReferenceError` (worse than planned). Diagnosed via the pino log's error message, fixed by restoring the full function, watched all tests go green again
+- [x] Added 4 more tests (2 unit, 2 integration) to comfortably clear the 8+ test deliverable: `toApiStatus` for `READING`/`FINISHED`, `POST /auth/signup` returns 201, `POST /auth/login` returns 200 with a token
+
+### Key concepts understood
+- Tests remember what you might forget — a test written once re-runs on every future change, catching regressions without manual re-checking
+- Test what has real logic and could break (your own business logic, endpoint contracts); don't test third-party code or trivial getters
+- supertest calls the Express `app` object directly — no real network, no real port, which is why `app.listen()` must be isolated in its own file
+- `beforeAll` runs setup once before all tests in a `describe` block — ideal for expensive one-time setup like logging in
+- A single incorrect edit can silently introduce a completely different bug than intended (changing a status code accidentally deleted a variable assignment) — tests catch this regardless of what specifically broke
+- Unique test data (e.g. `Date.now()` in emails) avoids false failures from unique-constraint collisions across repeated test runs
+- 8+ passing tests that verify real behavior is a better deliverable than chasing 100% code coverage, which only proves lines executed, not correctness
+- Reused the prior debugging methodology directly: checked the response, then the pino logs, to diagnose a real Postgres-not-running issue that surfaced during test-writing, not just during the planned exercises
+
+### Quiz
+- [x] 20-question mixed quiz — Score: 20/20
+
+### Deliverable
+- [x] 9 tests passing on a clean run (5 unit tests in `bookService.test.ts`, 4 integration tests in `app.test.ts`, plus 2 more of each type)
+- [x] One full intentional break-and-fix cycle demonstrated (plus a second, unplanned one)

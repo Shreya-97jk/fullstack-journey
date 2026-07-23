@@ -1,7 +1,7 @@
 import { Book as PrismaBook } from '../generated/prisma/client';
 import { prisma } from '../lib/prisma';
 import { Book } from '../models/book';
-function toApiStatus(status: PrismaBook['status']): Book['status'] {
+export function toApiStatus(status: PrismaBook['status']): Book['status'] {
   switch (status) {
     case 'WANT_TO_READ': return 'want-to-read';
     case 'READING': return 'reading';
