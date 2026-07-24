@@ -676,3 +676,34 @@ EOF
 - **MCP plugins** — the only one that reaches outside the conversation to read/write a real external system:
   - `postgres` — direct database queries against `reading_log_dev`
   - `github` (`github@claude-plugins-official`) — repository management: commits, diffs, branches, PRs, directly from a Claude Code session
+
+  ## Week 5 — Day 4-5 (2026-07-24)
+**Status:** Complete
+
+### Topics
+- [x] a. Image vs container — Dockerfile (recipe) → `docker build` → image (frozen snapshot) → `docker run` → container (live process). Reinforced using the existing `postgres:16` image / `pg-dev` container from Week 3
+- [x] b. Multi-stage builds — a "builder" stage installs dev dependencies and compiles TypeScript; only the compiled output gets copied into a fresh "runtime" stage, keeping the final image small and free of unnecessary build tooling
+- [x] c. Wrote `backend/Dockerfile` line by line, two stages: `builder` (`npm ci`, `npm run build`) and `runtime` (`npm ci --omit=dev`, `COPY --from=builder /app/dist ./dist`, copy `prisma/`, `EXPOSE 3000`, `CMD ["node", "dist/index.js"]`)
+- [x] d. `.dockerignore` — excludes `node_modules`, `.env`, `.git`
+- [x] e. Built and ran the image standalone (`docker build -t my-backend .`, `docker run -p 3000:3000 --env-file .env my-backend`) — confirmed `POST /auth/signup` fails with 500, since `localhost` inside a container refers to the container itself, not the host or `pg-dev`
+- [x] f. Wrote `docker-compose.yml` line by line — `postgres` service (image, `POSTGRES_PASSWORD`/`POSTGRES_DB`, named volume `pgdata`, port mapping) and `backend` service (`build: ./backend`, `env_file`, an `environment:` override for `DATABASE_URL` pointing at the `postgres` service name instead of `localhost`, port mapping, `depends_on`). Hit and fixed a real YAML indentation bug — services weren't nested under `services:`, and the top-level `volumes:` was incorrectly nested — before it would parse correctly
+- [x] g. `docker-compose up` — hit and fixed two real bugs: (1) port conflicts from the still-running standalone `my-backend` container and the old `pg-dev` container, found via `docker ps` and resolved with `docker stop`; (2) `prisma migrate deploy` failed inside the container because `prisma.config.ts` (which lives at the backend root, not inside `prisma/`) was never copied into the runtime image — fixed by adding `COPY prisma.config.ts ./` to the Dockerfile and rebuilding with `docker-compose up --build`. Ran `docker-compose exec backend npx prisma migrate deploy` successfully against the fresh database, then verified the full stack end-to-end with a real `POST /auth/signup` in Postman (`201 Created`)
+- [x] h. Updated `backend/README.md` with a new "Running with Docker (recommended)" section: clone → `cp backend/.env.example backend/.env` (fill in values) → `docker-compose up`, plus the one-time `docker-compose exec backend npx prisma migrate deploy` step
+
+### Key concepts understood
+- Dockerfile (text recipe) → image (frozen snapshot via `docker build`) → container (live process via `docker run`) is a strict pipeline; one Dockerfile can produce many images, one image can run as many containers
+- Multi-stage builds trade a larger intermediate "builder" stage for a small, clean final image — only artifacts explicitly named in `COPY --from=builder` cross the boundary
+- Copying `package*.json` before the rest of the source lets Docker cache the dependency-install layer, so unrelated code changes don't force a full reinstall
+- `localhost` inside a container always refers to that container itself — reaching another container requires Docker Compose's shared network and referring to the other container by its service name
+- `environment:` values in a compose service override matching keys from `env_file:`, which is how we pointed `DATABASE_URL` at `postgres:5432` for the containerized environment while keeping the rest of `.env` intact
+- YAML is indentation-sensitive in a way Dockerfiles are not — incorrect nesting silently changes the meaning of a compose file rather than necessarily throwing an obvious error
+- A Dockerfile's `COPY` instructions are exact and unforgiving — a file sitting right next to another copied folder (`prisma.config.ts` next to `prisma/`) is not included unless explicitly copied itself
+- Named volumes (`pgdata`) persist data across container restarts/recreation, since containers are otherwise meant to be disposable
+- `depends_on` only guarantees container start order, not that the dependency is actually ready to accept connections
+
+### Quiz
+- [x] 20-question mixed quiz — Score: 19/20
+
+### Deliverable
+- [x] `docker-compose up` brings up backend + Postgres together from a fresh migration state (verified via `docker-compose exec backend npx prisma migrate deploy` + a real signup request returning 201)
+- [x] `backend/README.md` updated with the three-step Docker setup flow
