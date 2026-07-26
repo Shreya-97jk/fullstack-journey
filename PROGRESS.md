@@ -707,3 +707,39 @@ EOF
 ### Deliverable
 - [x] `docker-compose up` brings up backend + Postgres together from a fresh migration state (verified via `docker-compose exec backend npx prisma migrate deploy` + a real signup request returning 201)
 - [x] `backend/README.md` updated with the three-step Docker setup flow
+
+## Week 5 — Day 6 (2026-07-26) — CAPSTONE / FINAL SESSION
+**Status:** Complete
+
+### Topics
+- [x] a. Built `/health` — a public (no `requireAuth`) endpoint that pings Postgres via `prisma.$queryRaw` and returns 200/`{status: 'ok'}` if reachable, 503/`{status: 'error'}` if not. Wired via a dedicated `healthController.ts` + `routes/health.ts`, registered in `app.ts`
+- [x] b. Rate limiting — installed `express-rate-limit`, built `authLimiter` (5 attempts / 15 min / IP), applied to both `/auth/login` and `/auth/signup`. Verified with a real 6-request burst: first 5 returned 401 (bad credentials), 6th returned 429
+- [x] c. CORS allowlist — replaced the hardcoded single dev origin with `CORS_ALLOWED_ORIGINS` (comma-separated env var, added to both `.env`/`.env.example` and `requiredEnvVars`), parsed via `.split(',')` into an array passed to `cors({ origin: allowedOrigins })`. Verified the allowlist actually blocks disallowed origins (`curl` with a fake `Origin` header returned no `Access-Control-Allow-Origin` header at all)
+- [x] d. Wrote the capstone root `README.md` from scratch, section by section, with heavy pushback on vague/inaccurate claims along the way. Caught and fixed a real, significant accuracy issue mid-writing: the pitch/overview implied books were scoped per-user ("personal collections"), but the `Book` model has no `userId` foreign key — corrected the wording and logged it honestly in "What's Not Yet Done." Also caught that `/auth` endpoints have zero Zod validation, unlike `/books`. Sections: one-sentence pitch, 3-sentence overview, tech stack (one sentence per technology, each tied to a real decision/story from the project), how to run locally, how the layers are organized, auth flow in one paragraph, what's not yet done
+- [x] e. Built two architecture diagrams in Excalidraw: a system overview (Browser → React → Express, with CORS allowlist and JWT-in-header called out, plus env vars feeding config) and an auth flow (signup/login/authenticated-request with JWT movement, color-coded valid/invalid branches). Exported as PNG, committed to `docs/`, referenced from the README
+- [x] Bonus real fix made during the README work: changed the Dockerfile's `CMD` to `sh -c "npx prisma migrate deploy && node dist/index.js"`, so migrations run automatically on container startup — turning "how to run locally" into a true 3-command flow instead of requiring a separate manual migration step
+
+### Key concepts understood
+- `/health` must never require auth — monitoring tools and load balancers have no credentials, and a false "down" reading from an auth failure defeats the entire purpose
+- `503 Service Unavailable` is the semantically correct status for "the process is fine, a dependency isn't" — distinct from `500`'s generic catch-all
+- Rate limiting targets specifically expensive/sensitive endpoints (auth) — applying it everywhere would break legitimate high-frequency use cases like health checks
+- CORS origin allowlisting, like every other secret/config value this project, belongs in the environment, not hardcoded — and should be required at startup, not optional
+- Writing a README that "proves understanding" surfaces real gaps between what you assume is true and what your code actually does — this session caught two genuine, previously-undiscovered accuracy issues in how the project had been described
+- Honest gaps (missing per-user scoping, missing auth validation, no frontend tests, no CI/CD, no deployment, no token refresh) are a feature of a good README, not a weakness — they prove you understand your system's actual boundaries
+- Architecture diagrams are most useful when they show the *real* mechanics (CORS allowlist, JWT in header, env vars flowing in) rather than a generic box-and-arrow sketch
+- A Windows Explorer setting (hidden file extensions) can silently double an extension on save (`file.png.png`) — worth checking the real filename via a WSL terminal (`ls -la`) rather than trusting Explorer's display name
+
+### Quiz
+- [x] 20-question mixed quiz (final quiz of the curriculum, also a full Week 5 review) — Score: 20/20
+
+### Deliverable
+- [x] `/health`, rate limiting, and the CORS allowlist all built and verified working
+- [x] Polished root `README.md` — pitch, overview, tech stack, architecture, run instructions, layer organization, auth flow, honest gaps — all pushed back on and corrected for accuracy
+- [x] Two architecture diagrams committed to `docs/` and referenced from the README
+- [x] `docker-compose up` verified from a fully fresh state (wiped volume) — auto-migrations, health check, and the full stack all working end-to-end
+
+---
+
+## Curriculum Complete
+
+Five weeks, covering: terminal/Git fundamentals, HTML/CSS/HTTP basics, JavaScript/TypeScript, a layered Express/TypeScript backend, PostgreSQL + Prisma, Zod validation, centralized error handling, structured logging (pino), 12-factor config, a React/TypeScript frontend, JWT authentication, browser + backend debugging tools, automated testing (Vitest + supertest), the GitHub MCP plugin, Docker + docker-compose, and a final hardening/documentation capstone. This is the last regular session of the structured curriculum.
